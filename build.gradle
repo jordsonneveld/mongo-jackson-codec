@@ -14,17 +14,7 @@
  * limitations under the License.
  */
 
-plugins {
-    id "com.jfrog.bintray" version "1.1"
-}
-
-apply plugin: 'java'
-apply plugin: 'maven-publish'
-
-sourceCompatibility = 1.8
-targetCompatibility = 1.8
-
-def mongoVersion = '3.2.2'
+def mongoVersion = '3.5.0'
 def bson4jacksonVersion = '2.7.0'
 
 group = 'fr.javatic.mongo'
@@ -41,97 +31,3 @@ dependencies {
     testCompile "junit:junit:4.12"
 }
 
-//tasks.withType(Javadoc) {
-//    options.links('http://docs.oracle.com/javase/8/docs/api/')
-//}
-//
-//task javadocJar(type: Jar, dependsOn: Javadoc) {
-//    classifier = 'javadoc'
-//    from 'build/docs/javadoc'
-//}
-
-task sourcesJar(type: Jar) {
-    from sourceSets.main.allSource
-    classifier = 'sources'
-}
-
-def projectInfo = [
-        description: 'Mongo Codec Using Jackson as serializer',
-        url        : 'https://github.com/ylemoigne/mongo-jackson-codec',
-        issues     : 'https://github.com/ylemoigne/mongo-jackson-codec/issues',
-        tags       : ['java8', 'mongodb', 'rxjava'],
-        scm        : [
-                url     : "git@github.com:ylemoigne/mongo-jackson-codec.git",
-                mavenUrl: "scm:git:git@github.com:ylemoigne/mongo-jackson-codec.git",
-        ],
-        license    : [
-                shortName: 'Apache-2.0',
-                fullName : 'The Apache Software License, Version 2.0',
-                url      : 'http://www.apache.org/licenses/LICENSE-2.0.txt',
-        ]
-]
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            from components.java
-            Artifact sourcesJar
-            Artifact javadocJar
-
-            pom.withXml {
-                asNode().children().last() + {
-                    resolveStrategy = Closure.DELEGATE_FIRST
-
-                    name project.name
-                    description projectInfo.description
-                    url projectInfo.url
-
-                    scm {
-                        connection projectInfo.scm.mavenUrl
-                        developerConnection projectInfo.scm.mavenUrl
-                        url projectInfo.scm.url
-                    }
-
-                    licenses {
-                        license {
-                            name projectInfo.license.fullName
-                            url projectInfo.license.url
-                        }
-                    }
-
-                    developers {
-                        developer {
-                            name "Yann Le Moigne"
-                            email "ylemoigne@javatic.fr"
-                            organization "JavaTIC"
-                            organizationUrl "http://www.javatic.fr"
-                        }
-                    }
-                }
-            }
-        }
-    }
-}
-
-
-bintray {
-    user = bintrayUser
-    key = bintrayKey
-    publications = ['mavenJava']
-    pkg {
-        repo = 'maven'
-        name = project.name
-        desc = projectInfo.description
-        websiteUrl = projectInfo.url
-        issueTrackerUrl = projectInfo.issues
-        vcsUrl = projectInfo.scm.url
-        licenses = [projectInfo.license.shortName]
-        labels = projectInfo.tags
-        version {
-            gpg {
-                sign = true
-                passphrase = gpgPassphrase
-            }
-        }
-    }
-}
