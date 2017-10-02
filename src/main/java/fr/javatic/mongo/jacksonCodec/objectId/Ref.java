@@ -24,7 +24,5 @@ import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
 @JacksonAnnotationsInside
-@JsonSerialize(using = IdSerializer.class, include = JsonSerialize.Inclusion.NON_NULL)
-@JsonDeserialize(using = IdDeserializer.class)
 public @interface Ref {
 }
