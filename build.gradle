@@ -20,10 +20,6 @@ def bson4jacksonVersion = '2.7.0'
 group = 'fr.javatic.mongo'
 version = "${mongoVersion}__0.5"
 
-repositories {
-    mavenCentral()
-}
-
 dependencies {
     compile "org.mongodb:mongodb-driver-core:${mongoVersion}"
     compile "de.undercouch:bson4jackson:${bson4jacksonVersion}"
